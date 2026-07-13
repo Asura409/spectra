@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
@@ -19,6 +20,7 @@ interface Guard {
 }
 
 export default function GuardsDirectoryPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
 
@@ -113,9 +115,12 @@ export default function GuardsDirectoryPage() {
                         <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0">
                           {guard.fullName.substring(0, 2).toUpperCase()}
                         </div>
-                        <span className="font-medium text-foreground group-hover:text-primary transition-colors cursor-pointer">
+                        <button
+                          onClick={() => router.push(`/guards/${guard.id}`)}
+                          className="font-medium text-foreground group-hover:text-primary transition-colors cursor-pointer hover:underline text-left"
+                        >
                           {guard.fullName}
-                        </span>
+                        </button>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground font-mono text-xs">{guard.nin}</td>

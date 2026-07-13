@@ -20,20 +20,28 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 export class UploadsController {
   constructor(private readonly uploadsService: UploadsService) {}
 
+  @Post('guard/:id/photo')
+  @Roles('ADMIN')
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(HttpStatus.OK)
+  async uploadGuardPhoto(
+    @Param('id') guardId: string,
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: any,
+  ) {
+    return this.uploadsService.uploadGuardPhoto(guardId, file, user.organizationId);
+  }
+
   @Post('incident/:id/photo')
   @Roles('EMPLOYEE', 'ADMIN')
   @UseInterceptors(FileInterceptor('file'))
   @HttpCode(HttpStatus.OK)
   async uploadIncidentPhoto(
     @Param('id') incidentId: string,
-    @UploadedFile() file: any,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: any,
   ) {
-    return this.uploadsService.attachIncidentPhoto(
-      incidentId,
-      file.filename,
-      user.organizationId,
-    );
+    return this.uploadsService.attachIncidentPhoto(incidentId, file, user.organizationId);
   }
 
   @Post('incident/:id/video')
@@ -42,14 +50,10 @@ export class UploadsController {
   @HttpCode(HttpStatus.OK)
   async uploadIncidentVideo(
     @Param('id') incidentId: string,
-    @UploadedFile() file: any,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: any,
   ) {
-    return this.uploadsService.attachIncidentVideo(
-      incidentId,
-      file.filename,
-      user.organizationId,
-    );
+    return this.uploadsService.attachIncidentVideo(incidentId, file, user.organizationId);
   }
 
   @Post('incident/:id/voice')
@@ -58,14 +62,10 @@ export class UploadsController {
   @HttpCode(HttpStatus.OK)
   async uploadIncidentVoiceNote(
     @Param('id') incidentId: string,
-    @UploadedFile() file: any,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: any,
   ) {
-    return this.uploadsService.attachIncidentVoiceNote(
-      incidentId,
-      file.filename,
-      user.organizationId,
-    );
+    return this.uploadsService.attachIncidentVoiceNote(incidentId, file, user.organizationId);
   }
 
   @Post('attendance/:id/photo')
@@ -74,13 +74,9 @@ export class UploadsController {
   @HttpCode(HttpStatus.OK)
   async uploadAttendancePhoto(
     @Param('id') attendanceId: string,
-    @UploadedFile() file: any,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: any,
   ) {
-    return this.uploadsService.attachAttendancePhoto(
-      attendanceId,
-      file.filename,
-      user.organizationId,
-    );
+    return this.uploadsService.attachAttendancePhoto(attendanceId, file, user.organizationId);
   }
 }

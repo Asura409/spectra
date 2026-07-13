@@ -1,3 +1,9 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+// Load .env before anything else (__dirname is dist/src/, go up 2 levels to backend root)
+config({ path: resolve(__dirname, '..', '..', '.env'), override: true });
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
