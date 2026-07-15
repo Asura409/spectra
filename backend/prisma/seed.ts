@@ -33,8 +33,10 @@ async function main() {
   console.log(`Created CEO user: ${adminUser.email}`);
 
   // 2. Create Clients
-  const client1 = await prisma.client.create({
-    data: {
+  const client1 = await prisma.client.upsert({
+    where: { email: 'olamide@chevron.com.ng' },
+    update: {},
+    create: {
       companyName: 'Chevron Nigeria',
       organizationId: organization.id,
       estateName: 'Chevron Alternative Estate',
@@ -49,8 +51,10 @@ async function main() {
     },
   });
 
-  const client2 = await prisma.client.create({
-    data: {
+  const client2 = await prisma.client.upsert({
+    where: { email: 'folake@pinnacle.com' },
+    update: {},
+    create: {
       companyName: 'Pinnacle Estates',
       organizationId: organization.id,
       estateName: 'Banana Island Plot A',
@@ -66,9 +70,12 @@ async function main() {
   });
   console.log('Created Clients');
 
-  // 3. Create Sites
-  const site1 = await prisma.site.create({
-    data: {
+  // 3. Create Sites (idempotent)
+  const site1 = await prisma.site.upsert({
+    where: { id: 'seed-site-chevron-main-gate' },
+    update: {},
+    create: {
+      id: 'seed-site-chevron-main-gate',
       name: 'Chevron Main Gate',
       organizationId: organization.id,
       address: 'Lekki-Epe Expressway, Lagos',
@@ -83,8 +90,11 @@ async function main() {
     },
   });
 
-  const site2 = await prisma.site.create({
-    data: {
+  const site2 = await prisma.site.upsert({
+    where: { id: 'seed-site-banana-island' },
+    update: {},
+    create: {
+      id: 'seed-site-banana-island',
       name: 'Banana Island Alpha Zone',
       organizationId: organization.id,
       address: 'Banana Island, Ikoyi, Lagos',
@@ -110,8 +120,10 @@ async function main() {
   ];
 
   for (const g of guardsData) {
-    await prisma.guard.create({
-      data: {
+    await prisma.guard.upsert({
+      where: { nin: g.nin },
+      update: {},
+      create: {
         fullName: g.name,
         organizationId: organization.id,
         photoUrl: 'https://via.placeholder.com/150',
